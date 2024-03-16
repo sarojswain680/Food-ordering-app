@@ -1,9 +1,12 @@
-import RestaurantCard, { withPromtedLabel } from "./RestaurantCard";
-import { useState, useEffect, useContext } from "react";
-import Shimmer from "./Shimmer";
+import { isEmpty } from "lodash";
+import get from "lodash/get";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import useOnlineStatus from "../utils/useOnlineStatus";
 import UserContext from "../utils/UserContext";
+import { RESTAURANT_API } from "../utils/constants";
+import useOnlineStatus from "../utils/useOnlineStatus";
+import RestaurantCard, { withPromtedLabel } from "./RestaurantCard";
+import Shimmer from "./Shimmer";
 
 const Body = () => {
   // Local State Variable - Super powerful variable
@@ -21,19 +24,17 @@ const Body = () => {
   }, []);
 
   const fetchData = async () => {
-    const data = await fetch(
-      "https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9351929&lng=77.62448069999999&page_type=DESKTOP_WEB_LISTING"
-    );
+    const data = await fetch(RESTAURANT_API);
 
     const json = await data.json();
-
+    const restaurants = get(
+      json,
+      "data.cards.1.card.card.gridElements.infoWithStyle.restaurants",
+      []
+    );
     // Optional Chaining
-    setListOfRestraunt(
-      json?.data?.cards[2]?.card?.card?.gridElements?.infoWithStyle?.restaurants
-    );
-    setFilteredRestaurant(
-      json?.data?.cards[2]?.card?.card?.gridElements?.infoWithStyle?.restaurants
-    );
+    setListOfRestraunt(restaurants);
+    setFilteredRestaurant(restaurants);
   };
 
   const onlineStatus = useOnlineStatus();
@@ -46,8 +47,7 @@ const Body = () => {
     );
 
   const { loggedInUser, setUserName } = useContext(UserContext);
-
-  return listOfRestaurants.length === 0 ? (
+  return isEmpty(listOfRestaurants) ? (
     <Shimmer />
   ) : (
     <div className="body">
@@ -102,7 +102,7 @@ const Body = () => {
         </div>
       </div>
       <div className="flex flex-wrap">
-        {filteredRestaurant.map((restaurant) => (
+        {filteredRestaurant?.map((restaurant) => (
           <Link
             key={restaurant?.info.id}
             to={"/restaurants/" + restaurant?.info.id}
