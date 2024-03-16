@@ -9,7 +9,7 @@ const Header = () => {
   const [btnNameReact, setBtnNameReact] = useState("Login");
 
   const onlineStatus = useOnlineStatus();
-  const logo = useShuffledLogo()
+  const logo = useShuffledLogo();
 
   const { loggedInUser } = useContext(UserContext);
   //console.log(loggedInUser);
@@ -20,7 +20,10 @@ const Header = () => {
   return (
     <div className="flex justify-between bg-pink-100 shadow-lg sm:bg-yellow-50 lg:bg-green-50">
       <div className="logo-container">
-        <img className="w-56" src={logo} />
+        <img
+          className="w-56"
+          src={require("../assets/logo/yumyard_logo1.png")}
+        />
       </div>
       <div className="flex items-center">
         <ul className="flex p-4 m-4">
