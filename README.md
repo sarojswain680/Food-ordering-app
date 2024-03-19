@@ -4,6 +4,8 @@ Before running this project, please enable the "Allow CORS: Access-Control-Allow
 
 # Live Demo
 
+https://jocular-selkie-954f72.netlify.app/
+
 # Parcel
 
 - Dev Build
